@@ -1,0 +1,6 @@
+name = IR Extention Fields
+description = "Provides IR Extention field formatter."
+core = 7.x
+package = IR Extention
+
+dependencies[] = ir_extention

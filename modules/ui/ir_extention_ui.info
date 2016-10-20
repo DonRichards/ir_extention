@@ -1,0 +1,9 @@
+name = IR Extention UI
+description = "Provides user interface for IR Extention variable management."
+core = 7.x
+package = IR Extention
+
+dependencies[] = ir_extention
+dependencies[] = variable
+
+configure = admin/config/user-interface/ir_extention

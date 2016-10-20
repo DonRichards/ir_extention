@@ -1,0 +1,7 @@
+name = IR Extention
+description = "Provides IR Extention integration into Drupal."
+core = 7.x
+package = IR Extention
+
+dependencies[] = libraries
+dependencies[] = jquery_update

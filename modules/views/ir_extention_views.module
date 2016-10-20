@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * ir_extention_views.module
+ */
+
+/**
+ * Implements hook_views_api().
+ */
+function ir_extention_views_views_api() {
+  return array(
+    'api' => 3,
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function ir_extention_views_menu() {
+  $items['ir_extention/views/ajax'] = array(
+    'title' => 'IR Extention',
+    'page callback' => 'ir_extention_views_ajax',
+    'delivery callback' => 'drupal_json_output',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function ir_extention_views_theme($existing, $type, $theme, $path) {
+  $items['ir_extention_views_pager'] = array(
+    'file' => 'theme/ir_extention_views.theme.inc',
+    'variables' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'options' => array()),
+    'pattern' => 'ir_extention_views_pager__',
+  );
+
+  return $items;
+}

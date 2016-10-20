@@ -1,0 +1,127 @@
+<?php
+
+/**
+ * @file
+ * ir_extention.module
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function ir_extention_theme() {
+  return array(
+    'ir_extention' => array(
+      'variables' => array('items' => array(), 'settings' => array()),
+      'template' => 'theme/ir_extention',
+      'file' => 'theme/ir_extention.theme.inc',
+    ),
+    'ir_extention_list' => array(
+      'variables' => array('items' => array(), 'settings' => array()),
+      'file' => 'theme/ir_extention.theme.inc',
+    ),
+    'ir_extention_list_item' => array(
+      'variables' => array('item' => array(), 'settings' => array()),
+      'file' => 'theme/ir_extention.theme.inc',
+    ),
+    'ir_extention_admin_settings_form' => array(
+      'render element' => 'form',
+    ),
+    'ir_extention_admin_settings_form_fields' => array(
+      'render element' => 'form',
+    ),
+  );
+}
+
+/**
+ * Implements hook_library().
+ */
+function ir_extention_library() {
+  $library = libraries_get_path('ir_plugin');
+
+  $libraries['ir_plugin'] = array(
+    'title' => 'IR Plugin',
+    'website' => 'github.com/utkdigitalinitiatives',
+    'version' => array(),
+    'js' => array(
+      $library . '' => array(
+        'scope' => 'footer',
+      ),
+    ),
+    'css' => array(
+      $library . '' => array(
+        'type' => 'file',
+        'media' => 'screen',
+      ),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
+ * Loads parent instance settings.
+ *
+ * @param string $instance
+ *  Settings group machine name.
+ *
+ * @param string $parent
+ *  Parent HTML selector.
+ */
+function ir_extention_initiate_instance($instance, $parent) {
+  $version = variable_get('jquery_update_jquery_version', FALSE);
+  if (!$version || $version == '') {
+    drupal_set_message(t('The installed jQuery version is not supported by IR Extention.'), 'error', FALSE);
+  }
+
+  // Include library.
+  drupal_add_library('ir_extention', 'ir_plugin');
+
+  // Load parent settings from the instance id.
+  $settings = _ir_extention_return_parent_instance_settings($instance);
+
+  // Provide alter for instance settings.
+  drupal_alter('ir_extention_settings', $settings, $instance);
+
+  // Include instance settings.
+  drupal_add_js(array(
+    'ir_plugin' => array(
+      $parent => array(
+        'settings' => $settings,
+        'views' => array(
+          'ajax_pagination' => variable_get('ir_extention_override_ajax_pagination_' . $instance)
+        ),
+      )
+    ),
+  ),
+  'setting');
+  drupal_add_js(drupal_get_path('module', 'ir_extention') . '/includes/js/ir_extention.settings.js', array('scope' => 'footer', 'type' => 'file'));
+}
+
+/**
+ * Call to parent instance function
+ */
+module_load_include('inc','ir_extention','settings/ir_extention_plugin_parent.instance');
+
+/**
+ * Return array with key pair.
+ */
+function ir_extention_instance_callback_list() {
+  $instances = _ir_extention_return_instances();
+
+  // Format array as callback option list.
+  foreach ($instances as $instance) {
+    $content[$instance->name] = $instance->name;
+  }
+
+  return $content;
+}
+
+/**
+ * Helper function, return active instances by name.
+ */
+function _ir_extention_return_instances() {
+  $query = 'SELECT name FROM {variable} WHERE name LIKE :name';
+  $results = db_query($query, array(':name' => db_like('ir_extention_settings_') . '%'))->fetchAll();
+
+  return $results;
+}

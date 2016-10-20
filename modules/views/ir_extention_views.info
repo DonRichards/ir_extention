@@ -1,0 +1,13 @@
+name = IR Extention Views
+description = "Provides IR Plugin integration into Drupal Views."
+core = 7.x
+package = IR Extention
+
+dependencies[] = views
+dependencies[] = ir_extention
+
+files[] = ir_extention_views.module
+files[] = ir_extention_views.views.inc
+files[] = ir_extention_views_plugin_style_ir_extention.inc
+files[] = ir_extention_views_plugin_pager_ir_extention.inc
+

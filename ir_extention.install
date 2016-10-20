@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * ir_extention.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function ir_extention_install() {
+  // Add default optionset.
+  variable_set('ir_extention_settings_default', 'ir_extention_default');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ir_extention_uninstall() {
+  $query = 'SELECT name FROM {variable} WHERE name LIKE :name';
+  $results = db_query($query, array(':name' => db_like('ir_extention_') . '%'))->fetchAll();
+
+  foreach ($results as $result) {
+    // Clean up stored variables.
+    variable_del($result->name);
+  }
+}
